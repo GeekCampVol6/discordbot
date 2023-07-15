@@ -4,13 +4,13 @@ from datetime import datetime, time
 import json
 
 # トークン取得
-TOKEN = "MTEyOTY0ODA0OTc4Njk5NDc2OQ.GTUwC_.4ME-DJnI_IqSfoFIrTNY4jZiwLTAF8ZERMgRLI"
+TOKEN = "MTEyOTY0ODA0OTc4Njk5NDc2OQ.GL37sa.OIrwRDzr5SO6Sm0FDIVQy_skY3ktbpzY_iSdBI"
 CHANNEL_ID = 1129649056625475688
 # JSONのファイルパスを取得
 JSON_FILE_PATH = "data.json"
 ITEM_FILE_PATH = "item.json"
 # 通知時間を取得
-NOTIFICATION_TIME = time(hour=9, minute=0, second=0)
+NOTIFICATION_TIME = time(hour=0, minute=0, second=0)
 
 # Botの起動
 intents = discord.Intents.default()
@@ -28,13 +28,16 @@ async def loop():
 
     with open(ITEM_FILE_PATH, 'r', encoding="utf-8") as item_file:
         datas = json.load(item_file)
-
-        messages = f"今日持ってくる持ち物"
-        channel = client.get_channel(CHANNEL_ID)
-        await channel.send(messages)
+        flag = 0
 
         for data in datas:
             date_objs = datetime.strptime(data['date'], '%Y-%m-%d')
+
+            if now.date() == date_objs.date() and now.time() >= notification_time.time() and flag == 0:
+                messages = f"今日持ってくる持ち物"
+                channel = client.get_channel(CHANNEL_ID)
+                await channel.send(messages)
+                flag = 1
 
             for detail in data['detail']:
                 if now.date() == date_objs.date() and now.time() >= notification_time.time():
@@ -44,12 +47,16 @@ async def loop():
 
     with open(JSON_FILE_PATH, 'r', encoding="utf-8") as json_file:
         data = json.load(json_file)
-        taskmsg = f"\n\n今日提出の課題"
-        channel = client.get_channel(CHANNEL_ID)
-        await channel.send(taskmsg)
-
+        flags = 0
         for item in data['detail']:
             date = datetime.strptime(item['date'], '%Y-%m-%d')
+
+            if now.date() == date.date() and now.time() >= notification_time.time() and flags == 0:
+                taskmsg = f"\n\n今日提出の課題"
+                channel = client.get_channel(CHANNEL_ID)
+                await channel.send(taskmsg)
+                flags = 1
+
             # 現在時刻が9:00以降であれば通知する
             if now.date() == date.date() and now.time() >= notification_time.time():
                 # メッセージを作成
