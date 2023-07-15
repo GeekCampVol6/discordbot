@@ -4,7 +4,7 @@ from datetime import datetime, time
 import json
 
 # トークン取得
-TOKEN = "MTEyOTY0ODA0OTc4Njk5NDc2OQ.GL37sa.OIrwRDzr5SO6Sm0FDIVQy_skY3ktbpzY_iSdBI"
+TOKEN = "MTEyOTY0ODA0OTc4Njk5NDc2OQ.GL91IV.btK_TMe4-_4UXyUVWQ5vJ4RcS7YNs-fIhdmmG8"
 CHANNEL_ID = 1129649056625475688
 # JSONのファイルパスを取得
 JSON_FILE_PATH = "data.json"
