@@ -1,0 +1,33 @@
+{
+  "class": "IH13A203",
+  "title": "自己教育の言説",
+  "detail": [
+    {
+      "subject": "CR32",
+      "item": "CR32:自己教育の言説",
+      "themaname": "創造性開発Ⅱ",
+      "date": "2023-07-15",
+      "teachername": "片岡利幸先生",
+      "detail": "レポート課題",
+      "status": "訓練課題"
+    },
+    {
+      "subject": "NT32",
+      "item": "NT32:なし",
+      "themaname": "ファイアウォール",
+      "date": "2023-07-15",
+      "teachername": "勝野祐子先生",
+      "detail": "ファイアウォールの機能についてまとめる",
+      "status": "評価課題"
+    },
+    {
+      "subject": "ST31",
+      "item": "ST31:なし",
+      "themaname": "電卓アプリ",
+      "date": "2023-09-15",
+      "teachername": "忘れた先生",
+      "detail": "Android Studioでの電卓アプリ作成",
+      "status": "評価課題"
+    }
+  ]
+}
