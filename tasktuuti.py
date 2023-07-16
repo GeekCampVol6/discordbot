@@ -4,7 +4,7 @@ from datetime import datetime, time
 import json
 
 # トークン取得
-TOKEN = "MTEyOTY0ODA0OTc4Njk5NDc2OQ.GL91IV.btK_TMe4-_4UXyUVWQ5vJ4RcS7YNs-fIhdmmG8"
+TOKEN = "MTEyOTY0ODA0OTc4Njk5NDc2OQ.GTamY_.DuXhajXWenaanA3ph3N9EOC9flWD3e0v0QqSes"
 CHANNEL_ID = 1129649056625475688
 # JSONのファイルパスを取得
 JSON_FILE_PATH = "data.json"
@@ -34,7 +34,7 @@ async def loop():
             date_objs = datetime.strptime(data['date'], '%Y-%m-%d')
 
             if now.date() == date_objs.date() and now.time() >= notification_time.time() and flag == 0:
-                messages = f"今日持ってくる持ち物"
+                messages = f"**今日持ってくる持ち物**"
                 channel = client.get_channel(CHANNEL_ID)
                 await channel.send(messages)
                 flag = 1
@@ -52,7 +52,7 @@ async def loop():
             date = datetime.strptime(item['date'], '%Y-%m-%d')
 
             if now.date() == date.date() and now.time() >= notification_time.time() and flags == 0:
-                taskmsg = f"\n\n今日提出の課題"
+                taskmsg = f"\n\n**今日提出の課題**"
                 channel = client.get_channel(CHANNEL_ID)
                 await channel.send(taskmsg)
                 flags = 1
@@ -73,3 +73,19 @@ async def on_ready():
     loop.start()
 
 client.run(TOKEN)
+
+# firebaseの設定でいりそうなやつ
+# import firebase_admin
+# from firebase_admin import credentials
+# from firebase_admin import firestore
+#
+# cred = credentials.Certificate("秘密鍵のパス")
+# firebase_admin.initialize_app(cred)
+# db = firestore.client()
+
+# details = db.collection('details').get()
+# docs = details.stream()
+
+# for doc in docs:
+#    JSON処理（上のやつ使う）
+#
