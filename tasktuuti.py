@@ -8,17 +8,17 @@ import os
 import json
 
 # トークン取得
-TOKEN = "トークン"
-CHANNEL_ID = 'チャンネル'
+TOKEN = "MTEyOTY0ODA0OTc4Njk5NDc2OQ.GQFqET.08wLPE_VejuZnRn3TguMCluBmTt7_i2pyZ47-c"
+CHANNEL_ID = 1129649056625475688
 # JSONのファイルパスを取得
 load_dotenv()
 
 
 project1 = os.getenv("API_KEY")
 cred = credentials.Certificate(
-    "json")
+    "geek06shime-firebase-adminsdk-9iigs-3b767cf425.json")
 firebase_admin.initialize_app(cred, {
-    'databaseURL': 'url',
+    'databaseURL': 'https://geek06shime-default-rtdb.firebaseio.com',
     'apiKey': project1,
 })
 # ref = db.reference('Users')
