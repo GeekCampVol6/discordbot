@@ -1,14 +1,29 @@
 import discord
 from discord.ext import commands, tasks
 from datetime import datetime, time
+from dotenv import load_dotenv
+import firebase_admin
+from firebase_admin import credentials, db, firestore
+import os
 import json
 
 # トークン取得
-TOKEN = "MTEyOTY0ODA0OTc4Njk5NDc2OQ.GTamY_.DuXhajXWenaanA3ph3N9EOC9flWD3e0v0QqSes"
-CHANNEL_ID = 1129649056625475688
+TOKEN = "トークン"
+CHANNEL_ID = 'チャンネル'
 # JSONのファイルパスを取得
-JSON_FILE_PATH = "data.json"
-ITEM_FILE_PATH = "item.json"
+load_dotenv()
+
+
+project1 = os.getenv("API_KEY")
+cred = credentials.Certificate(
+    "json")
+firebase_admin.initialize_app(cred, {
+    'databaseURL': 'url',
+    'apiKey': project1,
+})
+# ref = db.reference('Users')
+# JSON_FILE_PATH = "data.json"
+# ITEM_FILE_PATH = "item.json"
 # 通知時間を取得
 NOTIFICATION_TIME = time(hour=0, minute=0, second=0)
 
@@ -25,44 +40,45 @@ client = commands.Bot(command_prefix='!', intents=intents,
 async def loop():
     now = datetime.now()
     notification_time = datetime.combine(now.date(), NOTIFICATION_TIME)
+    datas = list(firestore.client().collection('Users').get())
+    print(datas)
 
-    with open(ITEM_FILE_PATH, 'r', encoding="utf-8") as item_file:
-        datas = json.load(item_file)
-        flag = 0
+    if datas:
+        for document in datas:
+            key = document.id
+            value = document.to_dict()
 
-        for data in datas:
-            date_objs = datetime.strptime(data['date'], '%Y-%m-%d')
+            messages = f"**今日持ってくる持ち物**"
+            channel = client.get_channel(CHANNEL_ID)
+            await channel.send(messages)
 
-            if now.date() == date_objs.date() and now.time() >= notification_time.time() and flag == 0:
-                messages = f"**今日持ってくる持ち物**"
+        for doc in datas:
+            name = doc.get('name')
+            if name:
+                itemmsg = f"\n{name}"
                 channel = client.get_channel(CHANNEL_ID)
-                await channel.send(messages)
-                flag = 1
+                await channel.send(itemmsg)
+    else:
+        print("データが見つかりません")
 
-            for detail in data['detail']:
-                if now.date() == date_objs.date() and now.time() >= notification_time.time():
-                    itemmsg = f"\n{detail['subject']}:{detail['object']}"
-                    channel = client.get_channel(CHANNEL_ID)
-                    await channel.send(itemmsg)
+    # with open(JSON_FILE_PATH, 'r', encoding="utf-8") as json_file:
+    #     data = json.load(json_file)
+    #     flags = 0
+    #     for item in data['detail']:
+    #         date = datetime.strptime(item['date'], '%Y-%m-%d')
 
-    with open(JSON_FILE_PATH, 'r', encoding="utf-8") as json_file:
-        data = json.load(json_file)
-        flags = 0
-        for item in data['detail']:
-            date = datetime.strptime(item['date'], '%Y-%m-%d')
+    #         if now.date() == date.date() and now.time() >= notification_time.time() and flags == 0:
+    #             taskmsg = f"\n\n**今日提出の課題**"
+    #             channel = client.get_channel(CHANNEL_ID)
+    #             await channel.send(taskmsg)
+    #             flags = 1
 
-            if now.date() == date.date() and now.time() >= notification_time.time() and flags == 0:
-                taskmsg = f"\n\n**今日提出の課題**"
-                channel = client.get_channel(CHANNEL_ID)
-                await channel.send(taskmsg)
-                flags = 1
-
-            # 現在時刻が9:00以降であれば通知する
-            if now.date() == date.date() and now.time() >= notification_time.time():
-                # メッセージを作成
-                message = f"\n【科目名称:{item['subject']}】\n課題名称:{item['themaname']} \n納期:{item['date']} \n担当教官:{item['teachername']} \n課題詳細:{item['detail']} \n課題種類:{item['status']}\n"
-                channel = client.get_channel(CHANNEL_ID)
-                await channel.send(message)
+    #         # 現在時刻が9:00以降であれば通知する
+    #         if now.date() == date.date() and now.time() >= notification_time.time():
+    #             # メッセージを作成
+    #             message = f"\n【科目名称:{item['subject']}】\n課題名称:{item['themaname']} \n納期:{item['date']} \n担当教官:{item['teachername']} \n課題詳細:{item['detail']} \n課題種類:{item['status']}\n"
+    #             channel = client.get_channel(CHANNEL_ID)
+    #             await channel.send(message)
 
 
 # Botの起動とDiscordサーバーへの接続
@@ -73,19 +89,3 @@ async def on_ready():
     loop.start()
 
 client.run(TOKEN)
-
-# firebaseの設定でいりそうなやつ
-# import firebase_admin
-# from firebase_admin import credentials
-# from firebase_admin import firestore
-#
-# cred = credentials.Certificate("秘密鍵のパス")
-# firebase_admin.initialize_app(cred)
-# db = firestore.client()
-
-# details = db.collection('details').get()
-# docs = details.stream()
-
-# for doc in docs:
-#    JSON処理（上のやつ使う）
-#
